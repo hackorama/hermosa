@@ -1,20 +1,19 @@
 """
 Web Hit Tracker
 """
-import logging as log
 
 from cachetools import TTLCache
 from flask import Flask
-from flask import jsonify
-from flask import request
 from flask import make_response
+from flask import request
+
 
 class SimpleTracker:
     """
     This is a simple tracker which tracks all time unique hit counts.
     It does not track time period based minute/day/hour hit rate.
 
-    To get unique hit rates, the unique hits can be persited with timestmap
+    To get unique hit rates, the unique hits can be persisted with timestamps
     to a data store and then can be queried for hit rate based on time periods.
     """
 
@@ -30,14 +29,14 @@ class SimpleTracker:
 
     # For demo using in memory store
     def update_total_hits(self):
-        self.total_hits +=1
+        self.total_hits += 1
 
     # For demo using in memory store
     def read_unique_ids(self):
         return set()
 
-    # For demo using in memory store, and theregular hash set used
-    # for memory store will not scale in real world.
+    # For demo using in memory store, and the regular python hash set
+    # used for memory store will not scale in real world.
     #
     # So a probabilistic data structure like bloom filter
     # should be used in  production that can fit into memory
@@ -64,7 +63,7 @@ class SimpleTracker:
         return len(self.lifetime_unique_hits)
 
     def get_total_hits(self):
-        return self.total_hits;
+        return self.total_hits
 
 
 class RateTracker:
@@ -87,7 +86,7 @@ class RateTracker:
         self.total_hits = 0
 
     def update_total_hits(self):
-        self.total_hits +=1
+        self.total_hits += 1
 
     def track_hit(self, req):
         self.update_total_hits()
@@ -95,8 +94,9 @@ class RateTracker:
         if req.cookies.get('t') is None:
             id = get_hash_ids(req)
             resp.set_cookie('t', str(id))
-            self.unique[id] = 1 # Cache is a dict storing a dummy value
-        print(self.get_unique_hits(), 'unique hits per last', self.seconds, 'seconds out of all', self.get_total_hits(), 'hits so far')
+            self.unique[id] = 1  # Cache is a dict storing a dummy value
+        print(self.get_unique_hits(), 'unique hits per last', self.seconds, 'seconds out of all', self.get_total_hits(),
+              'hits so far')
         return resp
 
     def get_unique_hits(self):
@@ -105,34 +105,43 @@ class RateTracker:
     def get_total_hits(self):
         return self.total_hits
 
+
 class DBTracker:
     """
     TODO: Track all hits to database with timestamps, lookup hit rates for any period as batch/scheduled jobs
     Or send to a stream processing server like Spark through a message queue like Kafka
     to calculate hit rates in near real time.
     """
+
     def track_hit(self, req):
-        pass
+        print('ERROR: DBTracker is not yet implemented')
+        return make_response('DBTracker is not yet implemented', 501)
 
     def get_unique_hits(self):
+        print('ERROR: DBTracker is not yet implemented')
         return 0
+
 
 def get_hash_ids(req):
     user_agent = req.environ.get('HTTP_USER_AGENT')
     source = req.environ.get('HTTP_X_FORWARDED_FOR')
-    if source is None: # Fallback to remmote addr if no forwarded for
+    if source is None:  # Fallback to remmote addr if no forwarded for
         source = req.environ.get('REMOTE_ADDR')
-    return hash(hash(user_agent) + hash(source)) # TODO Optimize
+    return hash(hash(user_agent) + hash(source))  # TODO Optimize
 
+
+# TODO: use arh parsing to select the tracker
 tracker = SimpleTracker()
-#tracker = RateTracker()
-#tracker = DBTracker()
+# tracker = RateTracker()
+# tracker = DBTracker()
 
 app = Flask(__name__)
+
 
 @app.route('/')
 def counter():
     return tracker.track_hit(request)
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
