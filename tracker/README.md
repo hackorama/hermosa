@@ -15,9 +15,7 @@ $ docker run -p 5000:5000 tracker
 
 ### Or using venv
 
-Setup venv and dependencies
-
-> Requires flask and cachetools
+Setup venv and dependencies (flask and cachetools from requirements.txt)
 
 ```
 $ python3 --version
