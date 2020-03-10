@@ -1,6 +1,12 @@
 # Hit Tracker
 
-Requires Python 3.7.3+
+> Requires Python 3.7.3+
+
+## Quick start demo
+
+### Setup venv and dependencies
+
+> Requires flask and cachetools
 
 ```
 $ python3 --version
@@ -10,7 +16,7 @@ $ source venv/bin/activate
 $ pip3 install -r requirements.txt
 ```
 
-Run test server ...
+### Run test server ...
 
 ```
 $ python3 server.py
@@ -27,7 +33,7 @@ $ python3 server.py
 2 unique hits from total 5 hits
 ```
 
-Run test client connections ...
+### Run test client connections ...
 
 ```
 $ rm cookies.txt
@@ -38,4 +44,72 @@ $ curl -b cookies.txt -c cookies.txt  -H "X_FORWARDED_FOR: 111" http://127.0.0.1
 $ rm cookies.txt
 $ curl -b cookies.txt -c cookies.txt  -H "X_FORWARDED_FOR: 222" http://127.0.0.1:5000
 ```
+
+### Try different implementations, by updating the code
+
+```
+# vi server.py
+...
+...
+127 tracker = SimpleTracker()
+128 #tracker = RateTracker()
+129 #tracker = DBTracker()
+...
+...
+```
+
+> TODO: Args processing to select the implementation
+
+## Implementation Notes
+
+### Simple Tracker
+
+`SimpleTracker().track(request)`
+
+This is a simple tracker which tracks all time unique hit counts.
+It does not track time period based minute/day/hour hit rate.
+
+To get unique hit rates, the unique hits can be persisted with timestmap
+to a data store and then can be queried for hit rate based on time periods.
+
+For demo using in memory store, and the regular hash set used
+for memory store will not scale in real world.
+
+So a probabilistic data structure like bloom filter
+should be used in  production that can fit into memory
+And to span multiple instances across systems.
+
+The bloom filter can be backed by a shared cache like Redis
+which also provides disk persistence.
+Shared cache can also handle concurrency without disk
+pressure using periodic snapshots
+
+### Hit Rate Tracker
+
+`RateTracker().track(request)`
+
+A hit rate tracker using fixed memory and a time to live cache with ttl set to
+the time period in seconds we are calculating the rate for
+
+The memory used = (the time period seconds) * (the expected max concurrent requests per second)
+
+This will not scale for large concurrent requests and single system
+But the idea could be extended across multiple systems with a shared cache like Redis with ttl sets
+
+> TODO: Explore using a timestamp indexed fixed size (of given time period) queue/array instead of ttl cache
+
+## DB (batched) and/or Stream processing (real time) Tracker
+
+`DBTracker().track(request)`
+
+> TODO: Track all hits to database with timestamps, lookup hit rates for any period as batch/scheduled jobs.
+>Or send to a stream processing server like Spark through a message queue like Kafka
+to calculate hit rates in near real time.
+
+### Other notes
+
+Simple demo examples used are on single thread when using multiple threads then the
+the data updates should be synchronised at code/cache/db layer as needed.
+
+When scaling out to multiple server instances if there is no shared cache layer individual nodes can calculate hit rate which can be combined in a map reduce fashion.
 

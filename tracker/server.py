@@ -11,10 +11,11 @@ from flask import make_response
 
 class SimpleTracker:
     """
-    This is a simple tracker which tracks all time unique hit count
-    It does not track period based minute/day/hour hit rate
-    The unique hits can be persited with timeatmp to a data store
-    and then can be queried for hit rate based on time periods
+    This is a simple tracker which tracks all time unique hit counts.
+    It does not track time period based minute/day/hour hit rate.
+
+    To get unique hit rates, the unique hits can be persited with timestmap
+    to a data store and then can be queried for hit rate based on time periods.
     """
 
     def __init__(self):
@@ -35,14 +36,17 @@ class SimpleTracker:
     def read_unique_ids(self):
         return set()
 
-    # For demo using in memory store
-    # and this regular hash set used will not scale in real world
-    # So a probablistic data structure like bloom filter
+    # For demo using in memory store, and theregular hash set used
+    # for memory store will not scale in real world.
+    #
+    # So a probabilistic data structure like bloom filter
     # should be used in  production that can fit into memory
-    # And to span multiple instnces across systems
-    # the bloom filter can be backed by a shared cache like redis
-    # which also provides disk persistance. Shared cache can also
-    # handle concurrency without disk pressure using periodic snapshots
+    # And to span multiple instances across systems.
+    #
+    # The bloom filter can be backed by a shared cache like Redis
+    # which also provides disk persistence.
+    # Shared cache can also handle concurrency without disk
+    # pressure using periodic snapshots
     def store_unique_ids(self, id):
         self.lifetime_unique_hits.add(id)
 
@@ -63,7 +67,6 @@ class SimpleTracker:
         return self.total_hits;
 
 
-
 class RateTracker:
     """
     A hit rate tracker using fixed memory and a time to live cache with ttl set to
@@ -72,7 +75,9 @@ class RateTracker:
     The memory used = (the time period seconds) * (the expected max concurrent requests per second)
 
     This will not scale for large concurrent requests and single system
-    But the idea could be extended across multiple systems with a sharded cache like Redis with ttl sets
+    But the idea could be extended across multiple systems with a shared cache like Redis with ttl sets
+
+    TODO: Explore using a timestamp indexed fixed size (of given time period) queue/array instead of ttl cache
     """
 
     def __init__(self, period_seconds=60, req_concurrency=100):
@@ -90,7 +95,7 @@ class RateTracker:
         if req.cookies.get('t') is None:
             id = get_hash_ids(req)
             resp.set_cookie('t', str(id))
-            self.unique[id] = 1 # cache is a dict store a dummy value
+            self.unique[id] = 1 # Cache is a dict storing a dummy value
         print(self.get_unique_hits(), 'unique hits per last', self.seconds, 'seconds out of all', self.get_total_hits(), 'hits so far')
         return resp
 
@@ -103,7 +108,8 @@ class RateTracker:
 class DBTracker:
     """
     TODO: Track all hits to database with timestamps, lookup hit rates for any period as batch/scheduled jobs
-    Or send to a stream processing server like Spark to calculate hit rates in near real time
+    Or send to a stream processing server like Spark through a message queue like Kafka
+    to calculate hit rates in near real time.
     """
     def track_hit(self, req):
         pass
