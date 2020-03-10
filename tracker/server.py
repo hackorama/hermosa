@@ -130,7 +130,7 @@ def get_hash_ids(req):
     return hash(hash(user_agent) + hash(source))  # TODO Optimize
 
 
-# TODO: use arh parsing to select the tracker
+# TODO: use arg parsing to select the tracker
 tracker = SimpleTracker()
 # tracker = RateTracker()
 # tracker = DBTracker()

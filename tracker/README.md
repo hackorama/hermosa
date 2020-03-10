@@ -50,11 +50,10 @@ $ curl -b cookies.txt -c cookies.txt  -H "X_FORWARDED_FOR: 222" http://127.0.0.1
 ```
 # vi server.py
 ...
-...
-127 tracker = SimpleTracker()
-128 #tracker = RateTracker()
-129 #tracker = DBTracker()
-...
+133 # TODO: use arg parsing to select the tracker
+134 tracker = SimpleTracker()
+135 # tracker = RateTracker()
+136 # tracker = DBTracker()
 ...
 ```
 
