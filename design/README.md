@@ -10,14 +10,32 @@ Fault tolerant low latency back end system that would be the backend system for 
 - Deployment Strategy
 - Zero downtime patching
 
-## High level design
+## High level design principles
 
-TODO
+- Stateless shared-nothing horizontal scaling app servers
+- Break services based on single responsibility and using the appropriate data system
+  - Cart/Session using Redis, Order processing with PostgreSQL, Comments/Review using MongoDB etc.
+- Load balanced ingress to REST API services used by mobile app and nodejs servers
+- Web frontend will also be served by horizontally scaled nodjs servers through load balancer
+- Distributed datastores should be selected and configured for easy cluster extension and node failure toleration
+- Service mesh and api gateway for service discoverability and centralized API entrypoint and management
+- Prefer mature and active technology over very new technology stack that may not get adoption
+  - If trying out new technology make it easily swappable using an adapter/plugin layer
+  - Try to leverage newer infra tooling outside the application code, especially on evolving ecosystem like k8s
+- Deployment strategies for HA, Failover, Disaster Recovery using geo separated multi-region DC's
+- Strong CI/CD deployment quick code change to fully tested deployed cluster
+- Along with features, keep focus on non-functional logging, observability, scaling etc.
+- Deployment separation of platform infrastructure that could be shared by multiple application
+- Application deployment isolation using namespaces and grouping using pods
+- Security must be baked in from design, development to deployment
+  - Leverage automated security scanning tools as part of CI/CD
+- Regular Load, scalability tests to track performance regressions
 
 ### Technology stack
 
 - Deployment
   - K8s
+  - Helm charts 
 - Workload Containers
   - Docker
 - Languages
@@ -55,6 +73,7 @@ we can integrate with other systems and frameworks easily.
   - KafkaStreams - for light weight stream processing if we already have Kafka~
 Frontend
   - Vue/React and not Angular for new projects
+  - Async HTTP client like axios for making REST API calls from frontend
 - Observability, logging and metrics
   - ELK and Prometheus because of integration with K8s
 
@@ -64,7 +83,7 @@ Multiple replicas for HA, geo separated multi region instances for redundancy an
 For databases and data queues configure enough replicas for the expected failure toleration and
 cross geo backups for database recovery in case of failures.
 
-Network (DNS/proxy/gateway) strategies (ddos prevention, rate limiting) for auto failover 
+Network (DNS/proxy/gateway) strategies (ddos prevention, rate limiting) for auto failover
 based on load/failure to other regions to minimise degraded performance.
 
 ### PII data handling
