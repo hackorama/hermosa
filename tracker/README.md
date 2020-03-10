@@ -3,7 +3,7 @@
 Requires Python 3.7.3+
 
 ```
-# python3 --version
+$ python3 --version
 Python 3.7.3
 $ python3 -m venv venv
 $ source venv/bin/activate
@@ -13,7 +13,7 @@ $ pip3 install -r requirements.txt
 Run test server ...
 
 ```
-python3 server.py
+$ python3 server.py
  * Serving Flask app "server" (lazy loading)
  * Environment: production
    WARNING: This is a development server. Do not use it in a production deployment.

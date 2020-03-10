@@ -3,12 +3,19 @@ Web Hit Tracker
 """
 import logging as log
 
+from cachetools import TTLCache
 from flask import Flask
 from flask import jsonify
 from flask import request
 from flask import make_response
 
-class LifetimeTracker:
+class SimpleTracker:
+    """
+    This is a simple tracker which tracks all time unique hit count
+    It does not track period based minute/day/hour hit rate
+    The unique hits can be persited with timeatmp to a data store
+    and then can be queried for hit rate based on time periods
+    """
 
     def __init__(self):
         # For demo using in memory store
@@ -32,25 +39,77 @@ class LifetimeTracker:
     # and this regular hash set used will not scale in real world
     # So a probablistic data structure like bloom filter
     # should be used in  production that can fit into memory
-    # And to span multiple insatnces across systems
+    # And to span multiple instnces across systems
     # the bloom filter can be backed by a shared cache like redis
-    # which also provides disk persistance
+    # which also provides disk persistance. Shared cache can also
+    # handle concurrency without disk pressure using periodic snapshots
     def store_unique_ids(self, id):
         self.lifetime_unique_hits.add(id)
 
-    # For demo using in memory store
-    def count_unique_ids(self):
-        return len(self.lifetime_unique_hits)
-
-    def track(self, req):
+    def track_hit(self, req):
         self.update_total_hits()
         resp = make_response()
         if req.cookies.get('t') is None:
             id = get_hash_ids(req)
             resp.set_cookie('t', str(id))
             self.store_unique_ids(id)
-        print(self.count_unique_ids(), 'unique hits from total', self.total_hits, 'hits')
+        print(self.get_unique_hits(), 'unique hits from total', self.get_total_hits(), 'hits')
         return resp
+
+    def get_unique_hits(self):
+        return len(self.lifetime_unique_hits)
+
+    def get_total_hits(self):
+        return self.total_hits;
+
+
+
+class RateTracker:
+    """
+    A hit rate tracker using fixed memory and a time to live cache with ttl set to
+    the time period in seconds we are calculating the rate for
+
+    The memory used = (the time period seconds) * (the expected max concurrent requests per second)
+
+    This will not scale for large concurrent requests and single system
+    But the idea could be extended across multiple systems with a sharded cache like Redis with ttl sets
+    """
+
+    def __init__(self, period_seconds=60, req_concurrency=100):
+        self.seconds = period_seconds
+        self.concurrency = req_concurrency
+        self.unique = TTLCache(maxsize=(self.seconds * self.concurrency), ttl=self.seconds)
+        self.total_hits = 0
+
+    def update_total_hits(self):
+        self.total_hits +=1
+
+    def track_hit(self, req):
+        self.update_total_hits()
+        resp = make_response()
+        if req.cookies.get('t') is None:
+            id = get_hash_ids(req)
+            resp.set_cookie('t', str(id))
+            self.unique[id] = 1 # cache is a dict store a dummy value
+        print(self.get_unique_hits(), 'unique hits per last', self.seconds, 'seconds out of all', self.get_total_hits(), 'hits so far')
+        return resp
+
+    def get_unique_hits(self):
+        return self.unique.currsize
+
+    def get_total_hits(self):
+        return self.total_hits
+
+class DBTracker:
+    """
+    TODO: Track all hits to database with timestamps, lookup hit rates for any period as batch/scheduled jobs
+    Or send to a stream processing server like Spark to calculate hit rates in near real time
+    """
+    def track_hit(self, req):
+        pass
+
+    def get_unique_hits(self):
+        return 0
 
 def get_hash_ids(req):
     user_agent = req.environ.get('HTTP_USER_AGENT')
@@ -59,12 +118,15 @@ def get_hash_ids(req):
         source = req.environ.get('REMOTE_ADDR')
     return hash(hash(user_agent) + hash(source)) # TODO Optimize
 
-tracker = LifetimeTracker()
+tracker = SimpleTracker()
+#tracker = RateTracker()
+#tracker = DBTracker()
+
 app = Flask(__name__)
 
 @app.route('/')
 def counter():
-    return tracker.track(request)
+    return tracker.track_hit(request)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
