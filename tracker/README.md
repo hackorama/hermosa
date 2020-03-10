@@ -4,7 +4,18 @@
 
 ## Quick start demo
 
-### Setup venv and dependencies
+### Using Docker
+
+```
+$ docker build -t tracker .
+$ docker run -p 5000:5000 tracker
+...
+ * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
+```
+
+### Or using venv
+
+Setup venv and dependencies
 
 > Requires flask and cachetools
 
@@ -14,6 +25,10 @@ Python 3.7.3
 $ python3 -m venv venv
 $ source venv/bin/activate
 $ pip3 install -r requirements.txt
+$ python3 server.py
+...
+ * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
+
 ```
 
 ### Run test server ...
