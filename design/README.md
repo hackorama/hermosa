@@ -19,6 +19,13 @@ Fault tolerant low latency back end system that would be the backend system for 
 - Web frontend will also be served by horizontally scaled nodjs servers through load balancer
 - Distributed datastores should be selected and configured for easy cluster extension and node failure toleration
 - Service mesh and api gateway for service discoverability and centralized API entrypoint and management
+- Performance (latency, concurrency) consideration when designing apps and systems architecture
+  - Reactive event driven design where applicable for concurrency
+  - Queuing, caching, batching for distributed processing
+  - Rate limit, Circuit breaker retries, queueing to avoid cascading failures
+  - Regular Load, scalability tests to track performance regressions
+  - Compression, batching for networking optimizations
+  - CDN edge caches to offload static assets and caching policies
 - Prefer mature and active technology over very new technology stack that may not get adoption
   - If trying out new technology make it easily swappable using an adapter/plugin layer
   - Try to leverage newer infra tooling outside the application code, especially on evolving ecosystem like k8s
@@ -29,7 +36,6 @@ Fault tolerant low latency back end system that would be the backend system for 
 - Application deployment isolation using namespaces and grouping using pods
 - Security must be baked in from design, development to deployment
   - Leverage automated security scanning tools as part of CI/CD
-- Regular Load, scalability tests to track performance regressions
 
 ### Technology stack
 
