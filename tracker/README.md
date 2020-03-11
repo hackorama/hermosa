@@ -125,3 +125,25 @@ the data updates should be synchronised at code/cache/db layer as needed.
 
 When scaling out to multiple server instances if there is no shared cache layer individual nodes can calculate hit rate which can be combined in a map reduce fashion.
 
+### Memory/Disk Storage
+
+As we can see in the different implementations approaches above depending on how you want
+to use the hit counter you can use in memory store for counter rate for smaller time period
+which can be aggregated for other time periods.
+
+When using memory based solution the design should make sure fixed memory usage by
+leveraging moving window streaming approaches and/or probabilistic data structures
+like bloom filters if minor affect on accuracy can be tolerated.
+
+In memory store can be extended across instances across nodes by using a shared in memory cache.
+
+If the hit counter is used as part of an extensive click stream analytics then storing them into
+a time series style distributed data store or data late or data warehouse can then be analysed
+for any time slices using batch jobs to get much more click stream insight that just a simple hit
+counter.
+
+In addition using stream processor pipeline can get real time click stream analytics without waiting
+for batch aggregation analytics data.
+
+When using disk based storage for analytics, the storage can be optimised by purge policies based
+on purge policies after analytics are done and/or compression and long term archiving storage strategies.
