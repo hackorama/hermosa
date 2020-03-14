@@ -12,12 +12,15 @@ Fault tolerant low latency back end system that would be the backend system for 
 - [Deployment Strategy](#deployment-strategy)
 - [Zero downtime patching](#zero-downtime-patching)
 
+> For full size version of the inline design diagrams used, please see [design-diagrams.pdf](design-diagrams.pdf)
 
 ## System design
 
 ![High Level System Design](system-design.png)
 
-High level system design diagram.  Design details with design choice explained in the sections below.
+**High level system design diagram**
+
+Design details with design choice explained in the sections below.
 
 > Additional optional data processing integrations (A stream processing cluster like Spark, a data warehouse/lake etc.) are not shown but can be integrated if the system requires it.
 
@@ -28,10 +31,22 @@ High level system design diagram.  Design details with design choice explained i
 
 ![Example System Stack](example-system-stack.png)
 
-Above is an example deployment technology stack diagram. There are many options for technology stack that will fit with the system design which are discussed below.
+**Example deployment stack on Kubernetes which can be on premise or on cloud**
+
+
+![Cloud Native Stack](example-cloud-native-system-stack.png)
+
+**Example cloud native deployment stack specific to a cloud vendor like AWS**
+
+![Cloud hosted Kubernetes](example-cloud-hosted-kubernetes-stack.png)
+
+**Deployment example using cloud hosted Kubernetes and cloud native services**
+
+
+Above we have few example deployment technology stack options. There are many options for technology stack that will fit with the system design which are discussed below.
 
 - Deployment
-  - K8s
+  - Kubernetes
   - Helm charts 
 - Workload Containers
   - Docker
@@ -58,7 +73,7 @@ we can integrate with other systems and frameworks easily.
 - Proxy
   - NGINX or HAProxy
 - Service Mesh and API gateway
-  - Envoy with Consul Connect and Ambassador because of better integration with K8s
+  - Envoy with Consul Connect and Ambassador because of better integration with Kubernetes
   - TODO: Must evaluate ishtio, kong etc.
 - API model
   - REST based because of wide adoption and helps in integration with other systems
@@ -72,7 +87,7 @@ Frontend
   - Vue/React and not Angular for new projects
   - Async HTTP client like axios for making REST API calls from frontend
 - Observability, logging and metrics
-  - ELK and Prometheus because of integration with K8s
+  - ELK and Prometheus because of integration with Kubernetes
 
 ## High level design principles
 
@@ -92,7 +107,7 @@ Frontend
   - CDN edge caches to offload static assets and caching policies
 - Prefer mature and active technology over very new technology stack that may not get adoption
   - If trying out new technology make it easily swappable using an adapter/plugin layer
-  - Try to leverage newer infra tooling outside the application code, especially on evolving ecosystem like k8s
+  - Try to leverage newer infra tooling outside the application code, especially on evolving ecosystem like Kubernetes
 - Deployment strategies for HA, Failover, Disaster Recovery using geo separated multi-region DC's
 - Strong CI/CD deployment quick code change to fully tested deployed cluster
 - Along with features, keep focus on non-functional logging, observability, scaling etc.
@@ -121,18 +136,18 @@ Leverage PII data compliance/discovery/scanning tools for all existing legacy ap
 
 If we want to target multiple clouds going cloud native will either tie us
 into a specific cloud vendor or we have to do native deployment for each specific cloud vendor.
-Instead targeting a deployment platform like K8s allow us to deploy on premise and to any cloud vendor
-since all top vendors provide k8s support.
+Instead targeting a deployment platform like Kubernetes allow us to deploy on premise and to any cloud vendor
+since all top vendors provide Kubernetes support.
 
 Source repository(git), binary repository(nexus, artifactory) and CI/CD pipline(jenkins) integration to deploy and test (unit) dev builds (on demand by developer) and integration builds (nightly, full end to end integration).
 
 ### Zero downtime patching
 
-For apps with k8s replicas, we can leverage k8s provided rolling upgrade and rollback to
+For apps with Kubernetes replicas, we can leverage Kubernetes provided rolling upgrade and rollback to
 roll out upgrades without application downtime.
 
 The patch and the rolling upgrade is qualified on an internal staging server before rolling out.
 
 Or if the app is an API server can leverage API gateway to do canary deployment of the patch to be production tested before promoting the canary to production.
 
-Automation/integration between CI/CD pipeline and k8s management tools to automate canary deployments and/or rolling upgrades.
+Automation/integration between CI/CD pipeline and Kubernetes management tools to automate canary deployments and/or rolling upgrades.
