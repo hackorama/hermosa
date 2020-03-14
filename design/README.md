@@ -16,9 +16,12 @@ Fault tolerant low latency back end system that would be the backend system for 
 
 ![High Level System Design](system-design.png)
 
-High level system design diagram.
+High level system design diagram.  Design details with design choice explained in the sections below.
 
-> Design details with design choice explained in the sections below.
+> Additional optional data processing integrations (A stream processing cluster like Spark, a data warehouse/lake etc.) are not shown but can be integrated if the system requires it.
+
+> Auth services will be either an internal service inside the cluster or an external service (Okta, LDAP). These will be centrally integrated with API gateway.
+
 
 ## High level design principles
 
@@ -48,6 +51,12 @@ High level system design diagram.
   - Leverage automated security scanning tools as part of CI/CD
 
 ### Technology stack
+
+example-system-stack.png
+
+![Example System Stack](example-system-stack.png)
+
+A typical deployment stack.
 
 - Deployment
   - K8s
