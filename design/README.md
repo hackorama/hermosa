@@ -35,6 +35,9 @@ Design details with design choice explained in the sections below.
 ![Cloud hosted Kubernetes](example-cloud-hosted-kubernetes-stack.png)
 **Deployment example using cloud hosted Kubernetes and cloud native services**
 
+![Kubernetes deployment](kubernetes-deployment.png)
+**Kubernetes deployment of services with namespace separation**
+
 Above we have few example deployment technology stack options. There are many options for technology stack that will fit with the system design which are discussed below.
 
 - Deployment
