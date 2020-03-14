@@ -25,9 +25,10 @@ High level system design diagram.  Design details with design choice explained i
 
 ### Technology stack
 
+
 ![Example System Stack](example-system-stack.png)
 
-A typical deployment stack.
+Above is an example deployment technology stack diagram. There are many options for technology stack that will fit with the system design which are discussed below.
 
 - Deployment
   - K8s
