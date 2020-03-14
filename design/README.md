@@ -6,6 +6,7 @@ Fault tolerant low latency back end system that would be the backend system for 
 
 - [System Design](#system-design)
 - [Technology stack](#technology-stack)
+- [High level design principles](#high-level-design-principles)
 - [No downtime](#no-downtime)
 - [PII data handling](#pii-data-handling)
 - [Deployment Strategy](#deployment-strategy)
@@ -22,37 +23,7 @@ High level system design diagram.  Design details with design choice explained i
 
 > Auth services will be either an internal service inside the cluster or an external service (Okta, LDAP). These will be centrally integrated with API gateway.
 
-
-## High level design principles
-
-- Stateless shared-nothing horizontal scaling app servers
-- Break services based on single responsibility and using the appropriate data system
-  - Cart/Session using Redis, Order processing with PostgreSQL, Comments/Review using MongoDB etc.
-- Load balanced ingress to REST API services used by mobile app and nodejs servers
-- Web frontend will also be served by horizontally scaled nodjs servers through load balancer
-- Distributed datastores should be selected and configured for easy cluster extension and node failure toleration
-- Service mesh and api gateway for service discoverability and centralized API entrypoint and management
-- Performance (latency, concurrency) consideration when designing apps and systems architecture
-  - Reactive event driven design where applicable for concurrency
-  - Queuing, caching, batching for distributed processing
-  - Rate limit, Circuit breaker retries, queueing to avoid cascading failures
-  - Regular Load, scalability tests to track performance regressions
-  - Compression, batching for networking optimizations
-  - CDN edge caches to offload static assets and caching policies
-- Prefer mature and active technology over very new technology stack that may not get adoption
-  - If trying out new technology make it easily swappable using an adapter/plugin layer
-  - Try to leverage newer infra tooling outside the application code, especially on evolving ecosystem like k8s
-- Deployment strategies for HA, Failover, Disaster Recovery using geo separated multi-region DC's
-- Strong CI/CD deployment quick code change to fully tested deployed cluster
-- Along with features, keep focus on non-functional logging, observability, scaling etc.
-- Deployment separation of platform infrastructure that could be shared by multiple application
-- Application deployment isolation using namespaces and grouping using pods
-- Security must be baked in from design, development to deployment
-  - Leverage automated security scanning tools as part of CI/CD
-
 ### Technology stack
-
-example-system-stack.png
 
 ![Example System Stack](example-system-stack.png)
 
@@ -101,6 +72,33 @@ Frontend
   - Async HTTP client like axios for making REST API calls from frontend
 - Observability, logging and metrics
   - ELK and Prometheus because of integration with K8s
+
+## High level design principles
+
+- Stateless shared-nothing horizontal scaling app servers
+- Break services based on single responsibility and using the appropriate data system
+  - Cart/Session using Redis, Order processing with PostgreSQL, Comments/Review using MongoDB etc.
+- Load balanced ingress to REST API services used by mobile app and nodejs servers
+- Web frontend will also be served by horizontally scaled nodjs servers through load balancer
+- Distributed datastores should be selected and configured for easy cluster extension and node failure toleration
+- Service mesh and api gateway for service discoverability and centralized API entrypoint and management
+- Performance (latency, concurrency) consideration when designing apps and systems architecture
+  - Reactive event driven design where applicable for concurrency
+  - Queuing, caching, batching for distributed processing
+  - Rate limit, Circuit breaker retries, queueing to avoid cascading failures
+  - Regular Load, scalability tests to track performance regressions
+  - Compression, batching for networking optimizations
+  - CDN edge caches to offload static assets and caching policies
+- Prefer mature and active technology over very new technology stack that may not get adoption
+  - If trying out new technology make it easily swappable using an adapter/plugin layer
+  - Try to leverage newer infra tooling outside the application code, especially on evolving ecosystem like k8s
+- Deployment strategies for HA, Failover, Disaster Recovery using geo separated multi-region DC's
+- Strong CI/CD deployment quick code change to fully tested deployed cluster
+- Along with features, keep focus on non-functional logging, observability, scaling etc.
+- Deployment separation of platform infrastructure that could be shared by multiple application
+- Application deployment isolation using namespaces and grouping using pods
+- Security must be baked in from design, development to deployment
+  - Leverage automated security scanning tools as part of CI/CD
 
 ### No downtime
 
