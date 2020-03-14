@@ -4,11 +4,21 @@
 
 Fault tolerant low latency back end system that would be the backend system for both mobile and web frontends.
 
-- Technology stack
-- No downtime
-- PII data handling
-- Deployment Strategy
-- Zero downtime patching
+- [System Design](#system-design)
+- [Technology stack](#technology-stack)
+- [No downtime](#no-downtime)
+- [PII data handling](#pii-data-handling)
+- [Deployment Strategy](#deployment-strategy)
+- [Zero downtime patching](#zero-downtime-patching)
+
+
+## System design
+
+![High Level System Design](system-design.png)
+
+High level system design diagram.
+
+> Design details with design choice explained in the sections below.
 
 ## High level design principles
 
