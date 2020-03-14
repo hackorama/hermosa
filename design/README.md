@@ -17,31 +17,23 @@ Fault tolerant low latency back end system that would be the backend system for 
 ## System design
 
 ![High Level System Design](system-design.png)
-
 **High level system design diagram**
 
 Design details with design choice explained in the sections below.
 
-> Additional optional data processing integrations (A stream processing cluster like Spark, a data warehouse/lake etc.) are not shown but can be integrated if the system requires it.
-
-> Auth services will be either an internal service inside the cluster or an external service (Okta, LDAP). These will be centrally integrated with API gateway.
+> Additional optional data processing integrations (A stream processing cluster like Spark, a data warehouse/lake etc.) are not shown but can be integrated if the system requires it. Auth services can be internal or external and will be centrally integrated with the API Gateway.
 
 ### Technology stack
 
-
 ![Example System Stack](example-system-stack.png)
-
 **Example deployment stack on Kubernetes which can be on premise or on cloud**
 
 
 ![Cloud Native Stack](example-cloud-native-system-stack.png)
-
 **Example cloud native deployment stack specific to a cloud vendor like AWS**
 
 ![Cloud hosted Kubernetes](example-cloud-hosted-kubernetes-stack.png)
-
 **Deployment example using cloud hosted Kubernetes and cloud native services**
-
 
 Above we have few example deployment technology stack options. There are many options for technology stack that will fit with the system design which are discussed below.
 
