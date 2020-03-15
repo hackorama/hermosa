@@ -12,7 +12,7 @@ Fault tolerant low latency back end system that would be the backend system for 
 - [Deployment Strategy](#deployment-strategy)
 - [Zero downtime patching](#zero-downtime-patching)
 
-> For full size version of the inline design diagrams used, please see [design-diagrams.pdf](design-diagrams.pdf)
+> For full size version of the inline design diagrams used, please download [design-diagrams.pdf](design-diagrams.pdf)
 
 ## System design
 
