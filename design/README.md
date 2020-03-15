@@ -19,8 +19,7 @@ Fault tolerant low latency back end system that would be the backend system for 
 | High level system design diagram |
 | :---: |
 | ![High Level System Design](system-design.png) |
-
-Design details with design choice explained in the sections below.
+| High level system design that can be adapated to on premise or cloud hosted Kubernetes or cloud native deployments. Design details with design choice explained in the sections below. |
 
 > Additional optional data processing integrations (A stream processing cluster like Spark, a data warehouse/lake etc.) are not shown but can be integrated if the system requires it. Auth services can be internal or external and will be centrally integrated with the API Gateway.
 
@@ -29,33 +28,38 @@ Design details with design choice explained in the sections below.
 | Example deployment stack on Kubernetes which can be on premise or on cloud |
 | :---: |
 | ![Example System Stack](example-system-stack.png) |
+| This shows an example Kubernetes specific deployment of the system design. Kubernetes can be on premise or cloud hosted.|
 
 
 | Example cloud native deployment stack specific to a cloud vendor like AWS |
 | :---: |
 | ![Cloud Native Stack](example-cloud-native-system-stack.png) |
+| This shows how the system design can be easily adapted for a cloud native stack and deployment. |
 
 
-| Deployment example using cloud hosted Kubernetes and cloud native services |
+| Deployment example using cloud hosted Kubernetes and cloud native services. |
 | :---: |
 | ![Cloud hosted Kubernetes](example-cloud-hosted-kubernetes-stack.png) |
+| This shows the system design adapted for a hybrid approach, using some of the cloud native stack while the main application services are deployed on the cloud hosted Kuberenetes. |
 
 
 | Kubernetes deployment of services with namespace separation |
 | :---: |
 | ![Kubernetes deployment](kubernetes-deployment.png) |
+| Shows the details of a Kubernetes deployment of the application services. |
 
 
 | Service technology stack examples at the Docker container and Kubernetes pod level |
 | :---: |
 | ![Service stack](example-service-stack.png) |
+| Provides the application service level view of the technology stack. |
 
 
-Above we have few example deployment technology stack options. There are many options for technology stack that will fit with the system design which are discussed below.
+Above we have few example deployment topologies and technology stack options. There are many options for technology stack that will fit with the system design which are discussed below.
 
 - Deployment
   - Kubernetes
-  - Helm charts 
+  - Helm charts
 - Workload Containers
   - Docker
 - Languages
