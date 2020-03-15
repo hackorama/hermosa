@@ -16,8 +16,9 @@ Fault tolerant low latency back end system that would be the backend system for 
 
 ## System design
 
-![High Level System Design](system-design.png)
-**High level system design diagram**
+| High level system design diagram |
+| :---: |
+| ![High Level System Design](system-design.png) |
 
 Design details with design choice explained in the sections below.
 
@@ -25,21 +26,30 @@ Design details with design choice explained in the sections below.
 
 ### Technology stack
 
-![Example System Stack](example-system-stack.png)
-**Example deployment stack on Kubernetes which can be on premise or on cloud**
+| Example deployment stack on Kubernetes which can be on premise or on cloud |
+| :---: |
+| ![Example System Stack](example-system-stack.png) |
 
 
-![Cloud Native Stack](example-cloud-native-system-stack.png)
-**Example cloud native deployment stack specific to a cloud vendor like AWS**
+| Example cloud native deployment stack specific to a cloud vendor like AWS |
+| :---: |
+| ![Cloud Native Stack](example-cloud-native-system-stack.png) |
 
-![Cloud hosted Kubernetes](example-cloud-hosted-kubernetes-stack.png)
-**Deployment example using cloud hosted Kubernetes and cloud native services**
 
-![Kubernetes deployment](kubernetes-deployment.png)
-**Kubernetes deployment of services with namespace separation**
+| Deployment example using cloud hosted Kubernetes and cloud native services |
+| :---: |
+| ![Cloud hosted Kubernetes](example-cloud-hosted-kubernetes-stack.png) |
 
-![Service stack](example-service-stack.png)
-**Service technology stack examples at the Docker container and Kubernetes pod level**
+
+| Kubernetes deployment of services with namespace separation |
+| :---: |
+| ![Kubernetes deployment](kubernetes-deployment.png) |
+
+
+| Service technology stack examples at the Docker container and Kubernetes pod level |
+| :---: |
+| ![Service stack](example-service-stack.png) |
+
 
 Above we have few example deployment technology stack options. There are many options for technology stack that will fit with the system design which are discussed below.
 
