@@ -38,6 +38,9 @@ Design details with design choice explained in the sections below.
 ![Kubernetes deployment](kubernetes-deployment.png)
 **Kubernetes deployment of services with namespace separation**
 
+![Service stack](example-service-stack.png)
+**Service technology stack examples at the Docker container and Kubernetes pod level**
+
 Above we have few example deployment technology stack options. There are many options for technology stack that will fit with the system design which are discussed below.
 
 - Deployment
